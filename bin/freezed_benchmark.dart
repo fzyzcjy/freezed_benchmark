@@ -7,23 +7,39 @@ void main(List<String> arguments) {
   var dummy = 0;
 
   syncBenchmark('naive', () {
+    var sum = '';
+    for (var i = 0; i < 10000000; ++i) {
+      final apple = NaiveApple(id: i, name: 'hello');
+      sum = apple.name;
+    }
+    dummy ^= sum.length;
+  }).report();
+  syncBenchmark('freezed', () {
+    var sum = '';
+    for (var i = 0; i < 10000000; ++i) {
+      final apple = FreezedApple(id: i, name: 'hello');
+      sum = apple.name;
+    }
+    dummy ^= sum.length;
+  }).report();
+
+  syncBenchmark('naive', () {
     var sum = 0;
-    for (var i = 0; i < 1000000; ++i) {
+    for (var i = 0; i < 10000000; ++i) {
       final apple = NaiveApple(id: i, name: 'hello');
       sum += apple.id;
     }
     dummy ^= sum;
   }).report();
-
   syncBenchmark('freezed', () {
     var sum = 0;
-    for (var i = 0; i < 1000000; ++i) {
+    for (var i = 0; i < 10000000; ++i) {
       final apple = FreezedApple(id: i, name: 'hello');
       sum += apple.id;
     }
     dummy ^= sum;
   }).report();
-  
+
   print(dummy);
 }
 
