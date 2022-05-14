@@ -22,6 +22,13 @@ void main(List<String> arguments) {
     }
     dummy ^= a.id;
   }).report();
+  syncBenchmark('freezed modified copyWith', () {
+    var a = FreezedApple(id: 0, name: 'hello');
+    for (var i = 0; i < 10000000; ++i) {
+      a = a.modifiedCopyWith(id: a.id + i, name: a.name);
+    }
+    dummy ^= a.id;
+  }).report();
 
   // {
   //   final naiveApple = createNaiveApple();
@@ -113,6 +120,19 @@ class FreezedApple with _$FreezedApple {
     required int id,
     required String name,
   }) = _FreezedApple;
+}
+
+extension ExtFreezedApple on FreezedApple {
+  FreezedApple Function({int? id, String? name}) get modifiedCopyWith {
+    return ({
+      Object? id = freezed,
+      Object? name = freezed,
+    }) =>
+        FreezedApple(
+          id: id == freezed ? this.id : id as int,
+          name: name == freezed ? this.name : name as String,
+        );
+  }
 }
 
 class FreezedAppleFakeImpl implements FreezedApple {
