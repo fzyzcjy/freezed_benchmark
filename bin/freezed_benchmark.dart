@@ -7,6 +7,21 @@ void main(List<String> arguments) {
   var dummy = 0;
 
   syncBenchmark('naive', () {
+    var a = NaiveApple(id: 0, name: 'hello');
+    for (var i = 0; i < 10000000; ++i) {
+      a = a.copyWith(id: a.id + i, name: a.name);
+    }
+    dummy ^= a.id;
+  }).report();
+  syncBenchmark('freezed', () {
+    var a = FreezedApple(id: 0, name: 'hello');
+    for (var i = 0; i < 10000000; ++i) {
+      a = a.copyWith(id: a.id + i, name: a.name);
+    }
+    dummy ^= a.id;
+  }).report();
+
+  syncBenchmark('naive', () {
     var sum = '';
     for (var i = 0; i < 10000000; ++i) {
       final apple = NaiveApple(id: i, name: 'hello');
